@@ -82,6 +82,30 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row v-if="advanced">
+            <a-col :md="8" :sm="24">
+              <a-form-item
+                label="Status"
+                :labelCol="{span: 6}"
+                :wrapperCol="{span: 17, offset: 1}"
+              >
+                <a-select
+                  show-search
+                  placeholder="Please choose"
+                  v-model="status"
+                  option-filter-prop="children"
+                  :filter-option="filterOptionDimension"
+                  @focus="handleFocusDimension"
+                  @blur="handleBlurDimension"
+                  @change="handleChangeDimension"
+                >
+                    <a-select-option value="ACTIVE">ACTIVE</a-select-option>
+                    <a-select-option value="INACTIVE">INACTIVE</a-select-option>
+                    <a-select-option value="PLAN">PLAN</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </div>
         <span style="float: right; margin-top: 3px;">
           <a-space size="small">
@@ -119,27 +143,6 @@
         @change="onChange"
         @selectedRowChange="onSelectChange"
       >
-        <!--<div slot="description" slot-scope="{text}">
-          {{text}}
-        </div>
-        <div slot="action" slot-scope="{text, record}">
-          <a style="margin-right: 8px">
-            <a-icon type="plus"/>
-            新增
-          </a>
-          <a style="margin-right: 8px">
-            <a-icon type="edit"/>
-            编辑
-          </a>
-          <a @click="deleteRecord(record.id)">
-            <a-icon type="delete"/>
-            删除1
-          </a>
-          <a @click="deleteRecord(record.id)" v-auth="`delete`">
-            <a-icon type="delete"/>
-            删除2
-          </a>
-        </div>-->
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
         </template>
@@ -192,10 +195,6 @@
       dataIndex: 'status',
       sorter: false
     },
-    /*{
-      title: '操作',
-      scopedSlots: {customRender: 'action'}
-    }*/
   ];
 
   export default {
@@ -243,7 +242,7 @@
           this.listType = listType.data;
           this.listBranch = listBranch.data;
           console.log('listType: ', listType);
-          this.dataSourceSearch = [...this.convertDataSourceToSearch(this.dataSource)];
+          this.dataSourceSearch = [...this.convertDataSource(this.dataSource)];
         } catch (e) {
           console.log("fetchAllData error", e);
         }
@@ -257,9 +256,10 @@
           let inputDay = !this.inputDay || moment(item.createdAt).format('YYYY-MM-DD') == this.inputDay.format('YYYY-MM-DD');
           let dimension = !this.dimension || item.materialType.dimension == this.dimension;
           let type = !this.type || item.materialType.materialType == this.type;
-          return no && branch && length && inputDay && dimension && type;
+          let status = !this.status || item.status == this.status;
+          return no && branch && length && inputDay && dimension && type && status;
         });
-        this.dataSourceSearch = [...this.convertDataSourceToSearch(dataFilter)];
+        this.dataSourceSearch = [...this.convertDataSource(dataFilter)];
       },
       resetSearchField() {
         this.materialNo = undefined;
@@ -268,6 +268,7 @@
         this.inputDay = undefined;
         this.dimension = undefined;
         this.type = undefined;
+        this.status = undefined;
       },
       deleteRecord(key) {
         this.dataSource = this.dataSource.filter(item => item.key !== key);
@@ -277,8 +278,27 @@
         this.advanced = !this.advanced
       },
       remove() {
-        this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
-        this.selectedRows = []
+        let ids = [];
+        let materialsNo = [];
+        for (let i = 0; i < this.selectedRows.length; i++) {
+          let item = this.selectedRows[i];
+          ids.push(item.id);
+          materialsNo.push(item.materialNo);
+        }
+        console.log(ids);
+        const payload = {
+          data: {
+            ids
+          }
+        };
+        this.MaterialRepository.deleteAllByIds(payload).then(() => {
+          let dataFilter = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.id === item.id) === -1);
+          let dataFilterSearch = this.dataSourceSearch.filter(item => this.selectedRows.findIndex(row => row.id === item.id) === -1);
+          this.dataSourceSearch = [...dataFilterSearch];
+          this.dataSource = [...dataFilter];
+          this.selectedRows = []
+          this.$message.info('You removed Materials No: ' + materialsNo.join(', '))
+        });
       },
       onClear() {
         this.$message.info('You cleared all checked rows')
@@ -290,7 +310,7 @@
         this.$message.info('Table status changed')
       },
       onSelectChange() {
-        this.$message.info('The selected row has changed')
+        // this.$message.info('The selected row has changed')
       },
       addNew() {
         this.$router.push('/material/new');
@@ -314,7 +334,7 @@
           option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
         );
       },
-      convertDataSourceToSearch(dataSource) {
+      convertDataSource(dataSource) {
         let dataReturn = [];
         for (let i = 0; i < dataSource.length; i++) {
           let item = dataSource[i];

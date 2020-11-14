@@ -57,9 +57,9 @@
     "whatwg-fetch": "^3.0.0"
   },
   "eslintConfig": {
-    "root": false,
+    "root": true,
     "env": {
-      "node": false
+      "node": true
     },
     "extends": [
       "plugin:vue/essential",
