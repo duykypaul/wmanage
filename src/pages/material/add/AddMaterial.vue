@@ -1,0 +1,269 @@
+<template>
+  <form :autoFormCreate="(form) => this.form = form">
+    <a-table
+      :columns="dataColumns"
+      :dataSource="dataSource"
+      :pagination="false"
+    >
+      <template  v-for="(col, i) in ['branch', 'dimension', 'type', 'length', 'quantity']" :slot="col" slot-scope="text, record">
+
+        <template v-if="`branch`.includes(col)">
+          <a-select
+            show-search
+            :key="col"
+            v-if="record.editable"
+            placeholder="Please choose"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            @change="(value, option) => handleChangeSelect(value, option, record.id, col)"
+          >
+            <a-select-option value="hn">HaNoi</a-select-option>
+            <a-select-option value="dn">DaNang</a-select-option>
+            <a-select-option value="sg">SaiGon</a-select-option>
+          </a-select>
+          <template v-else>{{text.value}}</template>
+        </template>
+
+        <template v-else-if="`dimension`.includes(col)">
+          <a-select
+            show-search
+            :key="col"
+            v-if="record.editable"
+            placeholder="Please choose"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            @change="(value, option) => handleChangeSelect(value, option, record.id, col)"
+          >
+            <a-select-option value="6X200X200">6X200X200</a-select-option>
+            <a-select-option value="6X250X250">6X250X250</a-select-option>
+            <a-select-option value="6X300X300">6X300X300</a-select-option>
+          </a-select>
+          <template v-else>{{text.value}}</template>
+        </template>
+
+        <template v-else-if="`type`.includes(col)">
+          <a-select
+            show-search
+            :key="col"
+            v-if="record.editable"
+            placeholder="Please choose"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            @change="(value, option) => handleChangeSelect(value, option, record.id, col)"
+          >
+            <a-select-option value="A">Good</a-select-option>
+            <a-select-option value="B">Medium</a-select-option>
+          </a-select>
+          <template v-else>{{text.value}}</template>
+        </template>
+
+        <template v-else-if="`length`.includes(col)">
+          <a-input-number
+            :key="col"
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :placeholder="columns[i].title"
+            :max="13000" :min="1"
+            @change="value => handleChange(value, record.id, col)"
+          />
+          <template v-else>{{text}}</template>
+        </template>
+
+        <template v-else>
+          <a-input-number
+            :key="col"
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :max="1000" :min="1"
+            :placeholder="columns[i].title"
+            @change="value => handleChange(value, record.id, col)"
+          />
+          <template v-else>{{text}}</template>
+        </template>
+
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <template v-if="record.editable">
+          <span v-if="record.isNew">
+            <a @click="saveRow(record.id)">{{$t('add')}}</a>
+            <a-divider type="vertical" />
+            <a-popconfirm :title="$t('deleteConfirm')" @confirm="remove(record.id)">
+              <a>{{$t('delete')}}</a>
+            </a-popconfirm>
+          </span>
+            <span v-else>
+            <a @click="saveRow(record.id)">{{$t('save')}}</a>
+            <a-divider type="vertical" />
+            <a @click="cancel(record.id)">{{$t('cancel')}}</a>
+          </span>
+        </template>
+        <span v-else>
+          <a @click="toggle(record.id)">{{$t('edit')}}</a>
+          <a-divider type="vertical" />
+          <a-popconfirm :title="$t('deleteConfirm')" @confirm="remove(record.id)">
+            <a>{{$t('delete')}}</a>
+          </a-popconfirm>
+        </span>
+      </template>
+    </a-table>
+    <a-button style="width: 100%; margin-top: 16px; margin-bottom: 8px" type="dashed" icon="plus" @click="newMember">{{$t('newMaterial')}}</a-button>
+  </form>
+</template>
+
+<script>
+const columns = [
+  {
+    title: 'Branch',
+    dataIndex: 'branch',
+    key: 'branch',
+    width: '20%',
+    scopedSlots: { customRender: 'branch' }
+  },
+  {
+    title: 'Dimension',
+    dataIndex: 'dimension',
+    key: 'dimension',
+    width: '20%',
+    scopedSlots: { customRender: 'dimension' }
+  },
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+    width: '15%',
+    scopedSlots: { customRender: 'type' }
+  },
+  {
+    title: 'Length',
+    dataIndex: 'length',
+    key: 'length',
+    width: '15%',
+    scopedSlots: { customRender: 'length' }
+  },
+  {
+    title: 'Quantity',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: '15%',
+    scopedSlots: { customRender: 'quantity' }
+  },
+  {
+    title: 'Operation',
+    key: 'operation',
+    scopedSlots: { customRender: 'operation' }
+  }
+];
+
+const dataSource = [
+  {
+    id: 1,
+    branch: {
+      key: 'hn',
+      value: 'HaNoi'
+    },
+    dimension: {
+      key: '6X200X200',
+      value: '6X200X200'
+    },
+    type: {
+      key: 'A',
+      value: 'Good'
+    },
+    length: '13000',
+    quantity: '20',
+    editable: false
+  }
+];
+
+export default {
+  name: 'AddMaterial',
+  i18n: require('./i18n-user'),
+  data () {
+    return {
+      columns,
+      dataSource
+    }
+  },
+  computed: {
+    dataColumns() {
+      return this.columns.map(column => {
+        column.title = this.$t('table.' + column.key);
+        return column
+      })
+    }
+  },
+  methods: {
+    handleSubmit (e) {
+      e.preventDefault()
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
+    newMember () {
+      this.dataSource.push({
+        id: this.dataSource.length + 1,
+        branch: {
+          key: '',
+          value: ''
+        },
+        dimension: {
+          key: '',
+          value: ''
+        },
+        type: {
+          key: '',
+          value: ''
+        },
+        length: '',
+        quantity: '',
+        editable: true,
+        isNew: true
+      })
+    },
+    remove (key) {
+      this.dataSource = this.dataSource.filter(item => item.id !== key)
+    },
+    saveRow (key) {
+      let target = this.dataSource.filter(item => item.id === key)[0];
+      target.editable = false;
+      target.isNew = false
+    },
+    toggle (key) {
+      let target = this.dataSource.filter(item => item.id === key)[0];
+      target.editable = !target.editable
+    },
+    getRowByKey (key, newData) {
+      const data = this.dataSource;
+      return (newData || data).filter(item => item.id === key)[0]
+    },
+    cancel (key) {
+      let target = this.dataSource.filter(item => item.id === key)[0];
+      target.editable = false
+    },
+    handleChange (value, key, column) {
+      console.log("handleChange: ", value, key, column);
+      const newData = [...this.dataSource];
+      const target = newData.filter(item => key === item.id)[0];
+      if (target) {
+        target[column] = value;
+        this.dataSource = newData
+      }
+    },
+    handleChangeSelect(value, option, key, col) {
+      const newData = [...this.dataSource];
+      const target = newData.filter(item => key === item.id)[0];
+      if (target) {
+        target[col].key = value;
+        target[col].value = option.componentOptions.children[0].text;
+        this.dataSource = newData
+      }
+    },
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
