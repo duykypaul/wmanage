@@ -20,7 +20,7 @@
                 :wrapperCol="{span: 17, offset: 1}"
               >
                 <a-select placeholder="Please choose" v-model="branch" >
-                  <template v-for="(item, index) in listBranch">
+                  <template v-for="(item, index) in branches">
                     <a-select-option :key="index" :value="item.branchCode">{{item.branchName}}</a-select-option>
                   </template>
                 </a-select>
@@ -62,7 +62,7 @@
                   @blur="handleBlurDimension"
                   @change="handleChangeDimension"
                 >
-                  <template v-for="(item, index) in listDimension">
+                  <template v-for="(item, index) in dimensions">
                     <a-select-option :key="index" :value="item">{{item}}</a-select-option>
                   </template>
                 </a-select>
@@ -75,7 +75,7 @@
                 :wrapperCol="{span: 17, offset: 1}"
               >
                 <a-select placeholder="Please choose" v-model="type">
-                  <template v-for="(item, index) in listType">
+                  <template v-for="(item, index) in types">
                     <a-select-option :key="index" :value="item.materialType">{{item.materialTypeName}}</a-select-option>
                   </template>
                 </a-select>
@@ -155,6 +155,7 @@
   import moment from 'moment';
   import StandardTableV2 from "@/components/table/StandardTableV2";
   import BranchRepository from "@/repositories/BranchRepository";
+  import {mapActions, mapGetters} from "vuex";
 
   const columns = [
     {
@@ -204,9 +205,6 @@
     data() {
       return {
         advanced: true,
-        listDimension: [],
-        listType: [],
-        listBranch: [],
         columns: columns,
         dataSource: [],
         dataSourceSearch: [],
@@ -224,31 +222,30 @@
     authorize: {
       deleteRecord: 'delete'
     },
+    computed: {
+      ...mapGetters('branch', ['branches']),
+      ...mapGetters('materialType', ['dimensions', 'types']),
+    },
     created() {
       this.fetchAllData();
     },
     methods: {
+      ...mapActions('branch', ['getBranches']),
+      ...mapActions('materialType', ['getDimensions', 'getTypes']),
       async fetchAllData() {
         try {
           console.log("fetchAllData list material");
-          let promiseMaterials = this.MaterialRepository.findAll();
-          let promiseDimensions = this.MaterialTypeRepository.findDistinctDimension();
-          let promiseTypes = this.MaterialTypeRepository.findDistinctByMaterialTypeAndAndMaterialTypeName();
-          let promiseBranchs = this.BranchRepository.findAll();
-
-          let [materials, listDimension, listType, listBranch] = await Promise.all([promiseMaterials, promiseDimensions, promiseTypes, promiseBranchs]);
+          this.getBranches();
+          this.getDimensions();
+          this.getTypes();
+          let materials = await this.MaterialRepository.findAll();
           this.dataSource = materials.data;
-          this.listDimension = listDimension.data;
-          this.listType = listType.data;
-          this.listBranch = listBranch.data;
-          console.log('listType: ', listType);
           this.dataSourceSearch = [...this.convertDataSource(this.dataSource)];
         } catch (e) {
           console.log("fetchAllData error", e);
         }
       },
       handleSearch() {
-        console.log(this.inputDay);
         let dataFilter = this.dataSource.filter(item => {
           let no = !this.materialNo || item.materialNo.toLowerCase().includes(this.materialNo.toLowerCase());
           let branch = !this.branch || item.branch.branchCode.equals(this.branch);

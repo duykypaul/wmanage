@@ -1,25 +1,25 @@
 <template>
   <div>
     <a-card :title="$t('material')" :bordered="false">
-      <user-form />
+      <add-material ref="material" />
     </a-card>
-    <footer-tool-bar>
+    <!--<footer-tool-bar>
       <a-button type="primary" @click="validate" :loading="loading">{{$t('submit')}}</a-button>
-    </footer-tool-bar>
+    </footer-tool-bar>-->
   </div>
 </template>
 
 <script>
-import UserForm from './AddMaterial'
+import AddMaterial from './AddMaterial'
 import FooterToolBar from '@/components/tool/FooterToolBar'
 
 export default {
   name: 'AddNewMaterial',
-  components: {FooterToolBar, UserForm},
+  components: {AddMaterial},
   i18n: require('./i18n'),
   data () {
     return {
-      loading: false
+      loading: true
     }
   },
   computed: {
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     validate () {
-      /*this.$refs.repository.form.validateFields((err, values) => {
+      /*this.$refs.material.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values)
         }

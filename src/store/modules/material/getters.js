@@ -7,5 +7,14 @@ export default {
         console.error(e)
       }
     }
+  },
+  lstNewMaterial: state => {
+    if (state.lstNewMaterial) {
+      try {
+        return state.lstNewMaterial
+      } catch (e) {
+        console.error(e)
+      }
+    }
   }
 }

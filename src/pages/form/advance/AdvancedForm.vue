@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-card class="card" :title="$t('repository')" :bordered="false">
-      <repository-form ref="repository" :showSubmit="false" />
+      <repository-form ref="repository" :showSubmit="true" />
     </a-card>
     <a-card class="card" :title="$t('task')" :bordered="false">
       <task-form ref="task" :showSubmit="false" />

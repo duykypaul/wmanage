@@ -19,5 +19,8 @@ export default {
   },
   deleteAllByIds(payload) {
     return Repository.delete(`${resource}`, payload);
+  },
+  saveAllData(payload) {
+    return Repository.post(`${resource}`, payload);
   }
 }

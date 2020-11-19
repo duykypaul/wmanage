@@ -8,6 +8,7 @@ module.exports = {
       edit: 'sửa',
       deleteConfirm: 'Xác nhận xóa hàng này?',
       newMaterial: 'vât liệu mới',
+      submit: 'Lưu',
       table: {
         branch: 'Chi nhánh',
         dimension: 'Kích cỡ',
@@ -15,7 +16,15 @@ module.exports = {
         length: 'Độ dài',
         quantity: 'Số lượng',
         operation: 'Hành động',
-      }
+      },
+
+      input: 'Hãy nhập',
+      select: 'Hãy chọn',
+      branch: 'chi nhánh',
+      dimension: 'kích thước',
+      type: 'loại',
+      length: 'chiều dài',
+      quantity: 'số lượng',
     },
     US: {
       add: 'add',
@@ -25,6 +34,7 @@ module.exports = {
       edit: 'edit',
       deleteConfirm: 'Confirm to delete this row?',
       newMaterial: 'new material',
+      submit: 'Submit',
       table: {
         branch: 'Branch',
         dimension: 'Dimension',
@@ -32,7 +42,15 @@ module.exports = {
         length: 'Length',
         quantity: 'Quantity',
         operation: 'Operation',
-      }
+      },
+
+      input: 'Please enter',
+      select: 'Please choose',
+      branch: 'branch',
+      dimension: 'dimension',
+      type: 'type',
+      length: 'length',
+      quantity: 'quantity',
     }
   }
 };

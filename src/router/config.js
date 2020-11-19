@@ -52,7 +52,7 @@ const options = {
             }
           ]
         },
-        /*{
+        {
           path: 'form',
           name: 'form',
           meta: {
@@ -77,7 +77,7 @@ const options = {
             }
           ]
         },
-        {
+        /*{
           path: 'list',
           name: 'list',
           meta: {
