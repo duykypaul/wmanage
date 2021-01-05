@@ -33,6 +33,21 @@ const routerMap = {
     name: 'query',
     component: () => import('@/pages/material/add')
   },
+  Orders: {
+    name: 'Order',
+    icon: 'gold',
+    component: view.page
+  },
+  Consignments: {
+    path: 'query',
+    name: 'consignments',
+    component: () => import('@/pages/order/list')
+  },
+  New: {
+    path: 'query',
+    name: 'query',
+    component: () => import('@/pages/order/add')
+  },
   form: {
     name: 'form',
     icon: 'form',

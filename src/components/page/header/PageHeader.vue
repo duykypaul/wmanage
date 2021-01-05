@@ -8,7 +8,7 @@
           </a-breadcrumb-item>
         </a-breadcrumb>
       </div>
-      <div class="detail">
+      <!--<div class="detail">
         <div class="main">
           <div class="row">
             <h1 v-if="showPageTitle && title" class="title">{{title}}</h1>
@@ -22,7 +22,7 @@
             <div v-if="this.$slots.extra" class="extra"><slot name="extra"></slot></div>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>

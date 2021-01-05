@@ -44,11 +44,37 @@ const options = {
             },
             {
               path: 'new',
-              name: 'Thêm mới',
+              name: 'Thêm mới nguyên liệu',
               meta: {
                 authority: 'queryForm',
               },
               component: () => import('@/pages/material/add'),
+            }
+          ]
+        },
+        {
+          path: 'orders',
+          name: 'Đơn hàng',
+          meta: {
+            icon: 'gold'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'consignments',
+              name: 'Danh sách lô hàng',
+              meta: {
+                authority: 'queryForm',
+              },
+              component: () => import('@/pages/order/list'),
+            },
+            {
+              path: 'new',
+              name: 'Tạo đơn hàng',
+              meta: {
+                authority: 'queryForm',
+              },
+              component: () => import('@/pages/order/add'),
             }
           ]
         },

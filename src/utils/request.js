@@ -112,10 +112,10 @@ function checkAuthorization(authType = AUTH_TYPE.BEARER) {
  * @param options
  */
 function loadInterceptors(interceptors, options) {
-	const {request, response} = interceptors
+	const {request, response} = interceptors;
 	// 加载请求拦截器
 	request.forEach(item => {
-		let {onFulfilled, onRejected} = item
+		let {onFulfilled, onRejected} = item;
 		if (!onFulfilled || typeof onFulfilled !== 'function') {
 			onFulfilled = config => config
 		}
@@ -129,7 +129,7 @@ function loadInterceptors(interceptors, options) {
 	})
 	// 加载响应拦截器
 	response.forEach(item => {
-		let {onFulfilled, onRejected} = item
+		let {onFulfilled, onRejected} = item;
 		if (!onFulfilled || typeof onFulfilled !== 'function') {
 			onFulfilled = response => response
 		}
