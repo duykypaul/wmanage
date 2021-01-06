@@ -35,6 +35,7 @@ export default {
             consignmentNo: consignment[0].type.key + consignment[0].dimension.key,
             length: detail.length,
             quantity: detail.quantity,
+            status: 'IMPORTED',
           };
           listSource.push(itemConsignment);
         }

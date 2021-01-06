@@ -50,6 +50,7 @@ export default {
               branch: {
                 branchCode: values.orderBean.branch
               },
+              status: 'IMPORTED',
               consignments: consignmentBeans
             };
             this.saveOrder(orderBean).then(result => {

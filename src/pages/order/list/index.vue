@@ -159,8 +159,8 @@
 
   const columns = [
     {
-      title: 'Material No',
-      dataIndex: 'materialNo',
+      title: 'Consignment No',
+      dataIndex: 'consignmentNo',
       sorter: true
     },
     {
@@ -170,18 +170,6 @@
       scopedSlots: {customRender: 'Branch'}
     },
     {
-      title: 'Length',
-      dataIndex: 'length',
-      sorter: true,
-      needTotal: true,
-      customRender: (text) => text + ' mm'
-    },
-    {
-      title: 'Input day',
-      dataIndex: 'inputDay',
-      sorter: true
-    },
-    {
       title: 'Dimension',
       dataIndex: 'dimension',
       sorter: true
@@ -189,6 +177,34 @@
     {
       title: 'Type',
       dataIndex: 'type',
+      sorter: true
+    },
+    {
+      title: 'Customer',
+      dataIndex: 'customer',
+      sorter: true,
+    },
+    {
+      title: 'Delivery Add',
+      dataIndex: 'deliveryAddress',
+      sorter: true,
+    },
+    {
+      title: 'Length',
+      dataIndex: 'length',
+      sorter: true,
+      needTotal: true,
+      customRender: (text) => text + ' mm'
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      sorter: true,
+      needTotal: true,
+    },
+    {
+      title: 'Delivery Date',
+      dataIndex: 'expectedDeliveryDate',
       sorter: true
     },
     {
