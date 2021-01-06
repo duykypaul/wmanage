@@ -16,6 +16,7 @@
 						placeholder="Please choose"
 						option-filter-prop="children"
 						:filter-option="filterOption"
+						:default-value="record.branch.key || undefined"
 						@change="(value, option) => handleChangeSelect(value, option, record.key, col)"
 					>
 						<template v-for="(item, index) in branches">
@@ -33,6 +34,7 @@
 						placeholder="Please choose"
 						option-filter-prop="children"
 						:filter-option="filterOption"
+						:default-value="record.dimension.key || undefined"
 						@change="(value, option) => handleChangeSelect(value, option, record.key, col)"
 					>
 						<template v-for="(item, index) in dimensions">
@@ -50,6 +52,7 @@
 						placeholder="Please choose"
 						option-filter-prop="children"
 						:filter-option="filterOption"
+						:default-value="record.type.key || undefined"
 						@change="(value, option) => handleChangeSelect(value, option, record.key, col)"
 					>
 						<template v-for="(item, index) in types">
@@ -66,6 +69,7 @@
 						style="margin: -5px 0"
 						:placeholder="columns[i].title"
 						:max="13000" :min="1"
+						:default-value="record.length || undefined"
 						@change="value => handleChange(value, record.key, col)"
 					/>
 					<template v-else>{{text}}</template>
@@ -78,6 +82,7 @@
 						style="margin: -5px 0"
 						:max="1000" :min="1"
 						:placeholder="columns[i].title"
+						:default-value="record.quantity || undefined"
 						@change="value => handleChange(value, record.key, col)"
 					/>
 					<template v-else>{{text}}</template>

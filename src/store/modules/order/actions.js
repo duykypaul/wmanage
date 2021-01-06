@@ -27,7 +27,7 @@ export default {
       if (consignment && consignment.length > 0) {
         for (let detail of consignment) {
           let itemConsignment = {
-            materialTypeBean: {
+            materialType: {
               materialType: consignment[0].type.key,
               materialTypeName: consignment[0].type.value,
               dimension: consignment[0].dimension.key

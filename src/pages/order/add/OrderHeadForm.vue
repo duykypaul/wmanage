@@ -107,6 +107,11 @@
       disabledDeliveryDate(current) {
         // Can not select days before today and today
         return current && current < moment().endOf('day');
+			},
+			resetData() {
+        /*let data = ['name'];
+				this.form.resetFields(data);*/
+				this.form.resetFields();
 			}
     }
   }

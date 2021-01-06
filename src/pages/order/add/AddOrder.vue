@@ -13,10 +13,11 @@
 							<a-select
 								show-search
 								:key="col"
-								v-if="!text.key"
+								v-if="record.editable"
 								placeholder="Please choose"
 								option-filter-prop="children"
 								:filter-option="filterOption"
+								:default-value="record.dimension.key || undefined"
 								@change="(value, option) => handleChangeSelect(value, option, record.key, col, index)"
 							>
 								<template v-for="(item, index) in dimensions">
@@ -30,10 +31,11 @@
 							<a-select
 								show-search
 								:key="col"
-								v-if="!text.key"
+								v-if="record.editable"
 								placeholder="Please choose"
 								option-filter-prop="children"
 								:filter-option="filterOption"
+								:default-value="record.type.key || undefined"
 								@change="(value, option) => handleChangeSelect(value, option, record.key, col, index)"
 							>
 								<template v-for="(item, index) in types">
@@ -305,54 +307,33 @@
       },
       handleChangeSelect(value, option, key, col, index) {
         const newData = [...this.dataSources[index]];
-        const target = newData.filter(item => key === item.key)[0];
-        if (target) {
+        newData.forEach(function (target)  {
           target[col].key = value;
           target[col].value = option.componentOptions.children[0].text;
-          this.dataSources[index] = newData
-        }
-      },
-      saveAllData() {
-        this.loading = true;
-        let listData = [];
-        this.dataSource.forEach(item => {
-          listData.push({
-            branchCode: item.branch.key,
-            dimension: item.dimension.value,
-            materialType: item.type.key,
-            length: item.length,
-            quantity: item.quantity
-          })
         });
-        this.saveAllMaterial(listData).then(result => {
-          if (result.status === 200) {
-            this.dataSource = [
-              {
-                key: 1,
-                branch: {
-                  key: '',
-                  value: ''
-                },
-                dimension: {
-                  key: '',
-                  value: ''
-                },
-                type: {
-                  key: '',
-                  value: ''
-                },
-                length: '',
-                quantity: '',
-                editable: true
-              }
-            ];
-            this.$message.success("Save data success!", 3);
-          } else {
-            this.$message.error(result.message);
+        this.dataSources[index] = newData
+      },
+      resetData() {
+        let dataSource = [
+          {
+            key: 1,
+            dimension: {
+              key: '',
+              value: ''
+            },
+            type: {
+              key: '',
+              value: ''
+            },
+            length: '',
+            quantity: '',
+            editable: true,
+            isNew: true
           }
-          this.loading = false;
-        })
-      }
+        ];
+        this.dataSources.splice(0, this.dataSources.length, dataSource);
+        this.setListConsignment([]);
+			}
     }
   }
 </script>

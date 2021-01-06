@@ -7,7 +7,9 @@
       <add-order ref="consignments" />
     </a-card>
     <footer-tool-bar>
-      <a-button type="primary" @click="validate" :loading="loading">{{$t('submit')}}</a-button>
+      <a-space>
+        <a-button type="primary" @click="createOrder" :loading="loading">{{$t('submit')}}</a-button>
+      </a-space>
     </footer-tool-bar>
   </div>
 </template>
@@ -36,7 +38,7 @@ export default {
   },
   methods: {
     ...mapActions('order', ['saveOrder']),
-    validate () {
+    createOrder () {
       let consignmentBeans = this.listConsignment;
       this.$refs.orderHead.form.validateFields((err, values) => {
         if (!err) {
@@ -45,14 +47,18 @@ export default {
               customer: values.orderBean.name,
               deliveryAddress: values.orderBean.delivery_address,
               deliveryDate: moment(values.orderBean.delivery_date).format('YYYY-MM-DD'),
-              branchBean: {
+              branch: {
                 branchCode: values.orderBean.branch
               },
-              consignmentBeans: consignmentBeans
+              consignments: consignmentBeans
             };
             this.saveOrder(orderBean).then(result => {
               if (result.status === 200) {
                 this.$message.success("Save data success!", 3);
+
+                // reset data in screen
+                this.$refs.orderHead.resetData();
+                this.$refs.consignments.resetData();
               } else {
                 this.$message.error(result.message);
               }
