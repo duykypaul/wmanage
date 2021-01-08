@@ -53,7 +53,7 @@ const options = {
           ]
         },
         {
-          path: 'orders',
+          path: 'order',
           name: 'Đơn hàng',
           meta: {
             icon: 'gold'
@@ -61,21 +61,29 @@ const options = {
           component: PageView,
           children: [
             {
-              path: 'consignments',
-              name: 'Danh sách lô hàng',
-              meta: {
-                authority: 'queryForm',
-              },
-              component: () => import('@/pages/order/list'),
-            },
-            {
               path: 'new',
               name: 'Tạo đơn hàng',
               meta: {
                 authority: 'queryForm',
               },
               component: () => import('@/pages/order/add'),
-            }
+            },
+            {
+              path: 'consignments',
+              name: 'Danh sách lô hàng',
+              meta: {
+                authority: 'queryForm',
+              },
+              component: () => import('@/pages/order/consignments'),
+            },
+            {
+              path: 'orders',
+              name: 'Danh sách đơn hàng',
+              meta: {
+                authority: 'queryForm',
+              },
+              component: () => import('@/pages/order/orders'),
+            },
           ]
         },
         {
@@ -104,8 +112,8 @@ const options = {
           ]
         },
         /*{
-          path: 'list',
-          name: 'list',
+          path: 'consignments',
+          name: 'consignments',
           meta: {
             icon: 'table'
           },
@@ -117,37 +125,37 @@ const options = {
               meta: {
                 authority: 'queryForm',
               },
-              component: () => import('@/pages/list/QueryList'),
+              component: () => import('@/pages/consignments/QueryList'),
             },
             {
               path: 'primary',
               name: 'primary',
-              component: () => import('@/pages/list/StandardList'),
+              component: () => import('@/pages/consignments/StandardList'),
             },
             {
               path: 'card',
               name: 'card',
-              component: () => import('@/pages/list/CardList'),
+              component: () => import('@/pages/consignments/CardList'),
             },
             {
               path: 'search',
               name: 'search',
-              component: () => import('@/pages/list/search/SearchLayout'),
+              component: () => import('@/pages/consignments/search/SearchLayout'),
               children: [
                 {
                   path: 'article',
                   name: 'article',
-                  component: () => import('@/pages/list/search/ArticleList'),
+                  component: () => import('@/pages/consignments/search/ArticleList'),
                 },
                 {
                   path: 'application',
                   name: 'application',
-                  component: () => import('@/pages/list/search/ApplicationList'),
+                  component: () => import('@/pages/consignments/search/ApplicationList'),
                 },
                 {
                   path: 'project',
                   name: 'project',
-                  component: () => import('@/pages/list/search/ProjectList'),
+                  component: () => import('@/pages/consignments/search/ProjectList'),
                 }
               ]
             }

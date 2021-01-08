@@ -1,9 +1,13 @@
 import Repository from "@/repositories/Repository";
 
 const resource = '/orders';
+const consignments = '/consignments';
 export default {
   findAll() {
     return Repository.get(`${resource}`);
+  },
+  findAllConsignments() {
+    return Repository.get(`${resource}${consignments}`);
   },
   findById(id) {
     return Repository.get(`${resource}/${id}`);

@@ -65,7 +65,7 @@ export default {
               }
             })
           } else {
-            this.$message.error('Please fill out list consignment');
+            this.$message.error('Please fill out consignments consignment');
           }
         }
       });

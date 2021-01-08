@@ -42,7 +42,7 @@ export default {
   data () {
     return {
       minHeight: window.innerHeight - 64 - 122,
-      collapsed: false,
+      collapsed: true,
       showSetting: false,
       drawerOpen: false
     }

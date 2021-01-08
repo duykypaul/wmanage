@@ -238,7 +238,7 @@
       ...mapActions('material', ['saveAllMaterial']),
       async fetchAllData() {
         try {
-          console.log("fetchAllData list material");
+          console.log("fetchAllData consignments material");
           this.getBranches();
           this.getDimensions();
           this.getTypes();

@@ -33,20 +33,25 @@ const routerMap = {
     name: 'query',
     component: () => import('@/pages/material/add')
   },
-  Orders: {
+  Order: {
     name: 'Order',
     icon: 'gold',
     component: view.page
-  },
-  Consignments: {
-    path: 'query',
-    name: 'consignments',
-    component: () => import('@/pages/order/list')
   },
   New: {
     path: 'query',
     name: 'query',
     component: () => import('@/pages/order/add')
+  },
+  Consignments: {
+    path: 'query',
+    name: 'consignments',
+    component: () => import('@/pages/order/consignments')
+  },
+  Orders: {
+    path: 'query',
+    name: 'consignments',
+    component: () => import('@/pages/order/orders')
   },
   form: {
     name: 'form',
