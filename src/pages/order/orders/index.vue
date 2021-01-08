@@ -6,18 +6,18 @@
           <a-row>
             <a-col :md="8" :sm="24">
               <a-form-item
-                label="Material No"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
+                label="Consignment No"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
               >
-                <a-input v-model="materialNo" placeholder="Please enter"/>
+                <a-input v-model="consignmentNo" placeholder="Please enter" :allowClear="true"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item
                 label="Branch"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
               >
                 <a-select placeholder="Please choose" v-model="branch" >
                   <template v-for="(item, index) in branches">
@@ -26,31 +26,12 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item
-                label="Length"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
-              >
-                <a-input-number v-model="length" style="width: 100%" placeholder="Please enter" :max="13000" :min="1"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row v-if="advanced">
-            <a-col :md="8" :sm="24">
-              <a-form-item
-                label="Input day"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
-              >
-                <a-date-picker style="width: 100%" placeholder="Please enter input date" v-model="inputDay"/>
-              </a-form-item>
-            </a-col>
+            <!--DIMENSION-->
             <a-col :md="8" :sm="24">
               <a-form-item
                 label="Dimension"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
               >
                 <a-select
                   show-search
@@ -68,11 +49,14 @@
                 </a-select>
               </a-form-item>
             </a-col>
+          </a-row>
+          <a-row v-if="advanced">
+            <!--TYPE-->
             <a-col :md="8" :sm="24">
               <a-form-item
                 label="Type"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
               >
                 <a-select placeholder="Please choose" v-model="type">
                   <template v-for="(item, index) in types">
@@ -81,13 +65,54 @@
                 </a-select>
               </a-form-item>
             </a-col>
+            <!--CUSTOMER-->
+            <a-col :md="8" :sm="24">
+              <a-form-item
+                label="Customer"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
+              >
+                <a-input v-model="customer" style="width: 100%" placeholder="Please enter" :maxLength="44" :allowClear="true"/>
+              </a-form-item>
+            </a-col>
+            <!--DELIVERY ADD-->
+            <a-col :md="8" :sm="24">
+              <a-form-item
+                label="Delivery add"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
+              >
+                <a-input v-model="deliveryAddress" style="width: 100%" placeholder="Please enter" :maxLength="44" :allowClear="true"/>
+              </a-form-item>
+            </a-col>
           </a-row>
           <a-row v-if="advanced">
+            <!--LENGTH-->
+            <a-col :md="8" :sm="24">
+              <a-form-item
+                label="Length"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
+              >
+                <a-input-number v-model="length" style="width: 100%" placeholder="Please enter" :max="13000" :min="1" />
+              </a-form-item>
+            </a-col>
+            <!--DELIVERY DATE-->
+            <a-col :md="8" :sm="24">
+              <a-form-item
+                label="Delivery date"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
+              >
+                <a-date-picker style="width: 100%" placeholder="Please choose" v-model="deliveryDate"/>
+              </a-form-item>
+            </a-col>
+            <!--STATUS-->
             <a-col :md="8" :sm="24">
               <a-form-item
                 label="Status"
-                :labelCol="{span: 6}"
-                :wrapperCol="{span: 17, offset: 1}"
+                :labelCol="{span: 7}"
+                :wrapperCol="{span: 16, offset: 1}"
               >
                 <a-select
                   show-search
@@ -99,9 +124,10 @@
                   @blur="handleBlurDimension"
                   @change="handleChangeDimension"
                 >
-                    <a-select-option value="ACTIVE">ACTIVE</a-select-option>
-                    <a-select-option value="INACTIVE">INACTIVE</a-select-option>
-                    <a-select-option value="PLAN">PLAN</a-select-option>
+                  <a-select-option value="IMPORTED">IMPORTED</a-select-option>
+                  <a-select-option value="PLAN">PLAN</a-select-option>
+                  <a-select-option value="TORIAI">TORIAI</a-select-option>
+                  <a-select-option value="EXPORTED">EXPORTED</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -126,7 +152,7 @@
           <a-dropdown>
             <a-menu @click="handleMenuClick" slot="overlay">
               <a-menu-item key="delete">Delete</a-menu-item>
-              <a-menu-item key="audit">Audit</a-menu-item>
+              <a-menu-item key="toriai">Toriai</a-menu-item>
             </a-menu>
             <a-button>
               Bulk operation
@@ -204,7 +230,7 @@
     },
     {
       title: 'Delivery Date',
-      dataIndex: 'expectedDeliveryDate',
+      dataIndex: 'deliveryDate',
       sorter: true
     },
     {
@@ -216,7 +242,7 @@
 
   export default {
     name: 'MaterialList',
-    inject: ['MaterialRepository', 'MaterialTypeRepository', 'BranchRepository'],
+    inject: ['OrderRepository', 'MaterialTypeRepository', 'BranchRepository'],
     components: {StandardTableV2},
     data() {
       return {
@@ -225,12 +251,14 @@
         dataSource: [],
         dataSourceSearch: [],
         selectedRows: [],
-        materialNo: undefined,
+        consignmentNo: undefined,
         branch: undefined,
-        length: undefined,
-        inputDay: undefined,
         dimension: undefined,
         type: undefined,
+        customer: undefined,
+        deliveryAddress: undefined,
+        length: undefined,
+        deliveryDate: undefined,
         status: undefined,
         dataTest: []
       }
@@ -254,34 +282,45 @@
           this.getBranches();
           this.getDimensions();
           this.getTypes();
-          let materials = await this.MaterialRepository.findAll();
-          this.dataSource = materials.data;
+          let consignments = await this.OrderRepository.findAllConsignments();
+          this.dataSource = consignments.data;
+          console.log("259 fetchAllData: ", consignments.data);
           this.dataSourceSearch = [...this.convertDataSource(this.dataSource)];
         } catch (e) {
           console.log("fetchAllData error", e);
         }
       },
       handleSearch() {
-        let dataFilter = this.dataSource.filter(item => {
-          let no = !this.materialNo || item.materialNo.toLowerCase().includes(this.materialNo.toLowerCase());
-          let branch = !this.branch || item.branch.branchCode.equals(this.branch);
-          let length = !this.length || item.length == this.length;
-          let inputDay = !this.inputDay || moment(item.createdAt).format('YYYY-MM-DD') == this.inputDay.format('YYYY-MM-DD');
-          let dimension = !this.dimension || item.materialType.dimension == this.dimension;
-          let type = !this.type || item.materialType.materialType == this.type;
-          let status = !this.status || item.status == this.status;
-          return no && branch && length && inputDay && dimension && type && status;
-        });
-        this.dataSourceSearch = [...this.convertDataSource(dataFilter)];
+        try {
+          let dataFilter = this.dataSource.filter(item => {
+            let no = !this.consignmentNo || item.consignmentNo.toLowerCase().includes(this.consignmentNo.toLowerCase());
+            let branch = !this.branch || item?.order?.branch?.branchCode == this.branch;
+            let dimension = !this.dimension || item.materialType.dimension == this.dimension;
+            let type = !this.type || item.materialType.materialType == this.type;
+            let customer = !this.customer || item.order.customer.toLowerCase().includes(this.customer.toLowerCase());
+            let deliveryAddress = !this.deliveryAddress || item.order.deliveryAddress.toLowerCase().includes(this.deliveryAddress.toLowerCase());
+            let length = !this.length || item.length == this.length;
+            let deliveryDate = !this.deliveryDate || moment(item.order.deliveryDate).format('YYYY-MM-DD') == this.deliveryDate.format('YYYY-MM-DD');
+            let status = !this.status || item.status == this.status;
+            return no && branch && dimension && type && customer && deliveryAddress && length && deliveryDate && status;
+          });
+          this.dataSourceSearch = [...this.convertDataSource(dataFilter)];
+        } catch (e) {
+          console.log("284 handleSearch exception: ", e)
+        }
       },
       resetSearchField() {
-        this.materialNo = undefined;
+        this.consignmentNo = undefined;
         this.branch = undefined;
-        this.length = undefined;
-        this.inputDay = undefined;
         this.dimension = undefined;
         this.type = undefined;
+        this.customer = undefined;
+        this.deliveryAddress = undefined;
+        this.type = undefined;
+        this.length = undefined;
+        this.deliveryDate = undefined;
         this.status = undefined;
+        this.handleSearch();
       },
       deleteRecord(key) {
         this.dataSource = this.dataSource.filter(item => item.key !== key);
@@ -292,11 +331,11 @@
       },
       remove() {
         let ids = [];
-        let materialsNo = [];
+        let consignmentNos = [];
         for (let i = 0; i < this.selectedRows.length; i++) {
           let item = this.selectedRows[i];
           ids.push(item.id);
-          materialsNo.push(item.materialNo);
+          consignmentNos.push(item.consignmentNo);
         }
         console.log(ids);
         const payload = {
@@ -304,13 +343,13 @@
             ids
           }
         };
-        this.MaterialRepository.deleteAllByIds(payload).then(() => {
+        this.OrderRepository.deleteAllByIds(payload).then(() => {
           let dataFilter = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.id === item.id) === -1);
           let dataFilterSearch = this.dataSourceSearch.filter(item => this.selectedRows.findIndex(row => row.id === item.id) === -1);
           this.dataSourceSearch = [...dataFilterSearch];
           this.dataSource = [...dataFilter];
-          this.selectedRows = []
-          this.$message.info('You removed Materials No: ' + materialsNo.join(', '))
+          this.selectedRows = [];
+          this.$message.info('You removed Materials No: ' + consignmentNos.join(', '))
         });
       },
       onClear() {
@@ -320,13 +359,13 @@
         this.$message.info('You clicked on the status bar header')
       },
       onChange() {
-        this.$message.info('Table status changed')
+        // this.$message.info('Table status changed')
       },
       onSelectChange() {
         // this.$message.info('The selected row has changed')
       },
       addNew() {
-        this.$router.push('/material/new');
+        this.$router.push('/order/new');
       },
       handleMenuClick(e) {
         if (e.key === 'delete') {
@@ -349,18 +388,26 @@
       },
       convertDataSource(dataSource) {
         let dataReturn = [];
-        for (let i = 0; i < dataSource.length; i++) {
-          let item = dataSource[i];
-          dataReturn.push({
-            id: item.id,
-            materialNo: item.materialNo,
-            branch: item.branch.branchName,
-            length: item.length,
-            inputDay: moment(item.createdAt).format('YYYY-MM-DD'),
-            dimension: item.materialType.dimension,
-            type: item.materialType.materialTypeName,
-            status: item.status
-          })
+        try {
+          for (let i = 0; i < dataSource.length; i++) {
+            let item = dataSource[i];
+            dataReturn.push({
+              id: item.id,
+              consignmentNo: item.consignmentNo,
+              branch: item?.order?.branch?.branchName,
+              dimension: item?.materialType?.dimension,
+              type: item?.materialType?.materialTypeName,
+              customer: item?.order?.customer,
+              deliveryAddress: item?.order?.deliveryAddress,
+              length: item.length,
+              quantity: item.quantity,
+              deliveryDate: item?.order?.deliveryDate,
+              status: item.status
+            });
+            console.log("deliveryDate: ", item.order.deliveryDate);
+          }
+        } catch (e) {
+          console.log('369 exception: ', e)
         }
         return dataReturn;
       }

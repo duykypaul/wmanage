@@ -5,6 +5,7 @@
 				<a-form-item :label="$t('name')">
 					<a-input
 						:placeholder="$ta('input|name')"
+						autoComplete="off"
 						v-decorator="['orderBean.name', {rules: [{ required: true, message: $ta('input|name'), whitespace: true}]}]"
 					/>
 				</a-form-item>
@@ -13,6 +14,7 @@
 				<a-form-item :label="$t('delivery_address')">
 					<a-input
 						:placeholder="$ta('input|delivery_address')"
+						autoComplete="off"
 						v-decorator="['orderBean.delivery_address', {rules: [{ required: true, message: $ta('input|delivery_address'), whitespace: true}]}]"
 					/>
 				</a-form-item>

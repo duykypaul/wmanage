@@ -66,6 +66,7 @@
 								:max="1000" :min="1"
 								:placeholder="columns[i].title"
 								:default-value="record.quantity"
+								v-on:keyup.13="saveAndNewline(record.key, index)"
 								@change="value => handleChange(value, record.key, col, index)"
 							/>
 							<template v-else>{{text}}</template>
@@ -333,6 +334,11 @@
         ];
         this.dataSources.splice(0, this.dataSources.length, dataSource);
         this.setListConsignment([]);
+			},
+      saveAndNewline(key, index) {
+        this.saveRow(key, index);
+        let target = this.dataSources[index].filter(item => item.key === key)[0];
+				(!target.editable) && this.newMember(index);
 			}
     }
   }
