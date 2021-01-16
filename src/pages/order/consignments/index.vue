@@ -152,7 +152,7 @@
           <a-dropdown>
             <a-menu @click="handleMenuClick" slot="overlay">
               <a-menu-item key="delete">Delete</a-menu-item>
-              <a-menu-item key="toriai">Toriai</a-menu-item>
+              <a-menu-item key="toriai" :disabled="this.selectedRows.length === 0">Toriai</a-menu-item>
             </a-menu>
             <a-button>
               Bulk operation
@@ -174,6 +174,7 @@
         </template>
       </standard-table-v2>
     </div>
+    <modal-toriai ref="modalToriai" />
   </a-card>
 </template>
 
@@ -182,6 +183,7 @@
   import StandardTableV2 from "@/components/table/StandardTableV2";
   import BranchRepository from "@/repositories/BranchRepository";
   import {mapActions, mapGetters} from "vuex";
+  import ModalToriai from "@/pages/components/toriai/ModalToriai";
 
   const columns = [
     {
@@ -243,11 +245,11 @@
   export default {
     name: 'MaterialList',
     inject: ['OrderRepository', 'MaterialTypeRepository', 'BranchRepository'],
-    components: {StandardTableV2},
+    components: {ModalToriai, StandardTableV2},
     data() {
       return {
         advanced: true,
-        columns: columns,
+        columns,
         dataSource: [],
         dataSourceSearch: [],
         selectedRows: [],
@@ -260,7 +262,7 @@
         length: undefined,
         deliveryDate: undefined,
         status: undefined,
-        dataTest: []
+        dataTest: [],
       }
     },
     authorize: {
@@ -278,13 +280,11 @@
       ...mapActions('materialType', ['getDimensions', 'getTypes']),
       async fetchAllData() {
         try {
-          console.log("fetchAllData consignments material");
           this.getBranches();
           this.getDimensions();
           this.getTypes();
           let consignments = await this.OrderRepository.findAllConsignments();
           this.dataSource = consignments.data;
-          console.log("259 fetchAllData: ", consignments.data);
           this.dataSourceSearch = [...this.convertDataSource(this.dataSource)];
         } catch (e) {
           console.log("fetchAllData error", e);
@@ -352,6 +352,80 @@
           this.$message.info('You removed Materials No: ' + consignmentNos.join(', '))
         });
       },
+      toriai() {
+        this.$refs.modalToriai.setToriaiVisible();
+        let gyoData = this.convertGyoData(this.selectedRows);
+        this.$refs.modalToriai.setGyoData(gyoData);
+
+        let retsuData = [
+          {key: 1, name: "S00001", length: 13000, quantity: 3},
+          {key: 2, name: "S00002", length: 13000, quantity: 5},
+          {key: 3, name: "S00003", length: 13000, quantity: 6},
+          {key: 4, name: "", length: 0, quantity: 0},
+          {key: 5, name: "", length: 0, quantity: 0},
+          {key: 6, name: "", length: 0, quantity: 0},
+          {key: 7, name: "", length: 0, quantity: 0},
+          {key: 8, name: "", length: 0, quantity: 0},
+          {key: 9, name: "", length: 0, quantity: 0},
+          {key: 10, name: "", length: 0, quantity: 0},
+          {key: 11, name: "", length: 0, quantity: 0},
+          {key: 12, name: "", length: 0, quantity: 0},
+        ];
+        let kankeiPreData = [
+          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          /*TWO LAST ARRAY IS NUMBER LENGTH STEEL USED AND REMAINING */
+          [10000, 12000, 13000, 0, 0, 0, 0, 0, 0, 0],
+          [3000, 1000, 0, 0, 0, 0, 0, 0, 0, 0],
+        ];
+        // this.$refs.modalToriai.setRetsuDataPreKankei(gyoData, retsuData, kankeiPreData);
+        this.$refs.modalToriai.setRetsuDataPreKankei(gyoData);
+        console.log(this.selectedRows[0]);
+        let summaryData = [
+          {
+            key: '1',
+            branch: this.selectedRows[0].branch,
+            type: this.selectedRows[0].type,
+            dimension: this.selectedRows[0].dimension,
+            machiningCompletionDate: '2015/01/01',
+            totalLengthExpected: gyoData.reduce((acc,  el) => acc + el.length * el.quantity, 0),
+            totalQuantity: gyoData.reduce((acc,  el) => acc + el.quantity, 0),
+            totalLengthRemain: '',
+            rateUse: '',
+            rateRemain: '',
+          }
+        ];
+        this.$refs.modalToriai.setSummaryData(summaryData);
+      },
+      convertGyoData(data) {
+        try {
+          let convertGyoData = [];
+          data.forEach((item, index) => {
+            convertGyoData.push({
+              key: index + 1,
+              length: item.length,
+              quantity: item.quantity
+            });
+          });
+          convertGyoData.push(
+            {
+              key: (convertGyoData[convertGyoData.length - 1]?.key || 1) + 1,
+              length: 0,
+              quantity: 0
+            });
+          convertGyoData.push(
+            {
+              key: convertGyoData[convertGyoData.length - 1]?.key + 1,
+              length: 0,
+              quantity: 0
+            });
+          return convertGyoData;
+        } catch (e) {
+          console.log('exception in convertGyoData: ', e);
+        }
+
+      },
       onClear() {
         this.$message.info('You cleared all checked rows')
       },
@@ -370,6 +444,8 @@
       handleMenuClick(e) {
         if (e.key === 'delete') {
           this.remove()
+        } else {
+          this.toriai();
         }
       },
       handleChangeDimension(value) {
@@ -404,7 +480,6 @@
               deliveryDate: item?.order?.deliveryDate,
               status: item.status
             });
-            console.log("deliveryDate: ", item.order.deliveryDate);
           }
         } catch (e) {
           console.log('369 exception: ', e)
@@ -427,6 +502,10 @@
 
   .operator {
     margin-bottom: 18px;
+  }
+
+  .ant-table td {
+    white-space: nowrap;
   }
 
   @media screen and (max-width: 900px) {

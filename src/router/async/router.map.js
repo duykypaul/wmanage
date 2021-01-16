@@ -53,6 +53,11 @@ const routerMap = {
     name: 'consignments',
     component: () => import('@/pages/order/orders')
   },
+  Toriais: {
+    path: 'query',
+    name: 'toriais',
+    component: () => import('@/pages/order/toriais')
+  },
   form: {
     name: 'form',
     icon: 'form',

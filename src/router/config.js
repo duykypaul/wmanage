@@ -84,6 +84,14 @@ const options = {
               },
               component: () => import('@/pages/order/orders'),
             },
+            {
+              path: 'toriais',
+              name: 'Danh sách toriai',
+              meta: {
+                authority: 'queryForm',
+              },
+              component: () => import('@/pages/order/toriais'),
+            },
           ]
         },
         {
