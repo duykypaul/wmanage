@@ -27,5 +27,8 @@ export default {
   exeAlgorithm(payload) {
     return Repository.post(`${resource}${algorithm}`, payload);
   },
+  getNewToriaiHeadNo(branchName) {
+    return Repository.get(`${resource}/new-toriai-head-no/${branchName}`);
+  }
 
 }

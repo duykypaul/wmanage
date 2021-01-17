@@ -9,40 +9,49 @@
 			<!--========= START HEAD TORIAI ===========-->
 			<div class="headToriai" >
 				<a-row>
-					<a-col :md="4" :sm="24">
+					<a-col :md="5" :sm="24">
+						<a-form-item
+							label="Toriai head No"
+							:labelCol="{span: 11}"
+							:wrapperCol="{span: 12, offset: 1}"
+						>
+							<a-input style="width: 100%" :defaultValue="summaryData[0].toriaiHeadNo" :maxLength="44" :allowClear="false" :disabled="true"/>
+						</a-form-item>
+					</a-col>
+					<a-col :md="3" :sm="24">
 						<a-form-item
 							label="Branch"
-							:labelCol="{span: 7}"
-							:wrapperCol="{span: 16, offset: 1}"
+							:labelCol="{span: 11}"
+							:wrapperCol="{span: 12, offset: 1}"
 						>
 							<a-input style="width: 100%" :defaultValue="summaryData[0].branch" :maxLength="44" :allowClear="false" :disabled="true"/>
 						</a-form-item>
 					</a-col>
-					<a-col :md="4" :sm="24">
+					<a-col :md="3" :sm="24">
 						<a-form-item
 							label="Type"
-							:labelCol="{span: 7}"
-							:wrapperCol="{span: 16, offset: 1}"
+							:labelCol="{span: 10}"
+							:wrapperCol="{span: 13, offset: 1}"
 						>
 							<a-input style="width: 100%" :defaultValue="summaryData[0].type" :maxLength="44" :allowClear="false" :disabled="true"/>
 						</a-form-item>
 					</a-col>
 					<!--DIMENSION-->
-					<a-col :md="6" :sm="24">
+					<a-col :md="5" :sm="24">
 						<a-form-item
 							label="Dimension"
-							:labelCol="{span: 7}"
-							:wrapperCol="{span: 16, offset: 1}"
+							:labelCol="{span: 9}"
+							:wrapperCol="{span: 14, offset: 1}"
 						>
 							<a-input style="width: 100%" :defaultValue="summaryData[0].dimension" :maxLength="44" :allowClear="false" :disabled="true"/>
 						</a-form-item>
 					</a-col>
 
-					<a-col :md="10" :sm="24">
+					<a-col :md="8" :sm="24">
 						<a-form-item
 							label="Machining completion date"
-							:labelCol="{span: 10}"
-							:wrapperCol="{span: 13, offset: 1}"
+							:labelCol="{span: 14}"
+							:wrapperCol="{span: 9, offset: 1}"
 							:disabled="true"
 						>
 							<a-date-picker :default-value="moment(summaryData[0].machiningCompletionDate, dateFormat)" :format="dateFormat" :disabled="true"/>
@@ -142,7 +151,7 @@
   let getGyoColumns = (dataGyo) => {
     let renderGyoContent = (value, row, index) => {
       const obj = {
-        children: value,
+        children: formatNumber(value),
         attrs: {},
       };
       if (index >= dataGyo.length - 2) {
@@ -193,7 +202,7 @@
       style: {},
       customRender: (data, _record) => {
         // return record[index] || '';
-        return data || '.';
+        return data ? formatNumber(data) : '.';
       },
     }));
 	};

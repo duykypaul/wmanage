@@ -1,5 +1,8 @@
 import ToriaiRepository from "@/repositories/ToriaiRepository";
-
+let objError = {
+  status: 500,
+  message: "Error"
+};
 export default {
   async getToriais({commit}) {
     try {
@@ -11,21 +14,19 @@ export default {
       console.log(error);
     }
   },
-  async saveOrder({commit}, payload) {
+  async getNewToriaiHeadNo({commit}, payload) {
     try {
-      let order = await ToriaiRepository.create(payload);
-      if (order.status === 200) {
-        return order;
+      let no = await ToriaiRepository.getNewToriaiHeadNo(payload);
+      if (no.status === 200) {
+        return no.data
       }
+      return objError
     } catch (error) {
       console.log(error);
     }
+    return objError
   },
   async exeAlgorithm({commit}, payload) {
-    let objError = {
-      status: 500,
-      message: "Error"
-    };
     try {
       let toriaiHead = await ToriaiRepository.exeAlgorithm(payload);
       console.log("toriaiHead: ", toriaiHead);
@@ -37,6 +38,16 @@ export default {
     } catch (error) {
       console.log(error);
       return objError;
+    }
+  },
+  async saveToriai({commit}, payload) {
+    try {
+      let order = await ToriaiRepository.create(payload);
+      if (order.status === 200) {
+        return order;
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 }

@@ -278,6 +278,7 @@
     methods: {
       ...mapActions('branch', ['getBranches']),
       ...mapActions('materialType', ['getDimensions', 'getTypes']),
+      ...mapActions('toriai', ['getNewToriaiHeadNo']),
       async fetchAllData() {
         try {
           this.getBranches();
@@ -306,7 +307,7 @@
           });
           this.dataSourceSearch = [...this.convertDataSource(dataFilter)];
         } catch (e) {
-          console.log("284 handleSearch exception: ", e)
+          console.log("handleSearch exception: ", e)
         }
       },
       resetSearchField() {
@@ -353,49 +354,58 @@
         });
       },
       toriai() {
-        this.$refs.modalToriai.setToriaiVisible();
-        let gyoData = this.convertGyoData(this.selectedRows);
-        this.$refs.modalToriai.setGyoData(gyoData);
-        /*let retsuData = [
-          {key: 1, retsuNo: 1, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 2, retsuNo: 2, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 3, retsuNo: 3, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 4, retsuNo: 4, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 5, retsuNo: 5, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 6, retsuNo: 6, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 7, retsuNo: 7, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 8, retsuNo: 8, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 9, retsuNo: 9, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 10, retsuNo: 10, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 11, retsuNo: 11, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-          {key: 12, retsuNo: 12, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
-        ];
-        let kankeiPreData = [
-          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          /!*TWO LAST ARRAY IS NUMBER LENGTH STEEL USED AND REMAINING *!/
-          retsuData.map(item => item.lengthUsed),
-          retsuData.map(item => item.lengthRemaining),
-        ];
-        this.$refs.modalToriai.setRetsuDataPreKankei(gyoData, retsuData, kankeiPreData);*/
-        this.$refs.modalToriai.setRetsuDataPreKankei(gyoData);
-        console.log(this.selectedRows[0]);
-        let summaryData = [
-          {
-            key: '1',
-            branch: this.selectedRows[0].branch,
-            type: this.selectedRows[0].type,
-            dimension: this.selectedRows[0].dimension,
-            machiningCompletionDate: '2015/01/01',
-            totalLengthExpected: gyoData.reduce((acc,  el) => acc + el.length * el.quantity, 0),
-            totalQuantity: gyoData.reduce((acc,  el) => acc + el.quantity, 0),
-            totalLengthRemain: '',
-            rateUse: '',
-            rateRemain: '',
-          }
-        ];
-        this.$refs.modalToriai.setSummaryData(summaryData);
+        try {
+          this.getNewToriaiHeadNo(this.selectedRows[0].branch).then(result => {
+            if (result.status === 200) {
+              this.$refs.modalToriai.setToriaiVisible();
+              let gyoData = this.convertGyoData(this.selectedRows);
+              this.$refs.modalToriai.setGyoData(gyoData);
+              /*let retsuData = [
+								{key: 1, retsuNo: 1, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 2, retsuNo: 2, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 3, retsuNo: 3, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 4, retsuNo: 4, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 5, retsuNo: 5, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 6, retsuNo: 6, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 7, retsuNo: 7, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 8, retsuNo: 8, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 9, retsuNo: 9, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 10, retsuNo: 10, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 11, retsuNo: 11, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+								{key: 12, retsuNo: 12, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+							];
+							let kankeiPreData = [
+								[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+								[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+								[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+								/!*TWO LAST ARRAY IS NUMBER LENGTH STEEL USED AND REMAINING *!/
+								retsuData.map(item => item.lengthUsed),
+								retsuData.map(item => item.lengthRemaining),
+							];
+							this.$refs.modalToriai.setRetsuDataPreKankei(gyoData, retsuData, kankeiPreData);*/
+              this.$refs.modalToriai.setRetsuDataPreKankei(gyoData);
+
+              let summaryData = [
+                {
+                  key: '1',
+                  toriaiHeadNo: result.body,
+                  branch: this.selectedRows[0].branch,
+                  type: this.selectedRows[0].type,
+                  dimension: this.selectedRows[0].dimension,
+                  machiningCompletionDate: '2015/01/01',
+                  totalLengthExpected: gyoData.reduce((acc, el) => acc + el.length * el.quantity, 0),
+                  totalQuantity: gyoData.reduce((acc, el) => acc + el.quantity, 0),
+                  totalLengthRemain: '',
+                  rateUse: '',
+                  rateRemain: '',
+                }
+              ];
+              this.$refs.modalToriai.setSummaryData(summaryData);
+            }
+          })
+        } catch (e) {
+          console.log("exception get new toriai head no: ", e)
+        }
       },
       convertGyoData(data) {
         try {
