@@ -74,14 +74,14 @@
 					<div :style="{marginBottom: '10px'}">
 						<a-space direction="vertical">
 							<a-radio-group v-model="typeToriai" buttonStyle="solid">
-								<a-radio-button value="fast">
+								<a-radio-button value="FAST">
 									Fast cut
 								</a-radio-button>
-								<a-radio-button value="saves">
+								<a-radio-button value="SAVES">
 									Saves cut
 								</a-radio-button>
 							</a-radio-group>
-							<a-button type="primary" :loading="loadingToriai" :block="true" @click="() => setLoadingToriai()">
+							<a-button type="primary" :loading="loadingToriai" :block="true" @click="() => runAlgorithm()">
 								Toriai
 							</a-button>
 						</a-space>
@@ -136,6 +136,7 @@
 <script>
   import {formatNumber} from "@/utils/util";
   import moment from 'moment';
+  import {mapActions} from "vuex";
   const NUMBER_COLUMNS = 12;
 
   let getGyoColumns = (dataGyo) => {
@@ -203,7 +204,7 @@
       data.reduce(
         (acc, curr, index) => ({
           ...acc,
-          [index]: curr.name,
+          [index]: curr.bozaimotoToriaiHeadNo,
         }),
         {}
       )
@@ -240,7 +241,7 @@
   let getRetsuDataDefault = () => {
     let data = [];
     for (let i = 1; i <= NUMBER_COLUMNS; i++) {
-      data.push({key: i, name: "", length: 0, quantity: 0});
+      data.push({key: i, retsuNo: i, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0});
     }
     return data;
 	};
@@ -266,7 +267,7 @@
       totalLengthRemain: 14000,
       rateUse: 80,
 			rateRemain: 20,
-			branch: 1
+			branch: ''
     }
   ];
 
@@ -324,7 +325,7 @@
         retsuData: [],
         retsuColumns: getRetsuColumns(retsuDataDefault),
         loadingToriai: false,
-        typeToriai: 'fast',
+        typeToriai: 'FAST',
         summaryData,
         summaryColumns,
       };
@@ -333,13 +334,10 @@
 
 		},
     methods: {
+      ...mapActions('toriai', ['exeAlgorithm']),
       moment,
       setToriaiVisible() {
         this.toriaiVisible = !this.toriaiVisible;
-      },
-      setLoadingToriai() {
-        this.loadingToriai = !this.loadingToriai;
-        console.log(this.gyoData)
       },
 			setGyoData(dataGyo) {
         this.gyoData = dataGyo;
@@ -357,11 +355,49 @@
       setSummaryData(summaryData) {
         this.summaryData = [...summaryData]
 			},
+      runAlgorithm() {
+        try {
+          this.loadingToriai = !this.loadingToriai;
+          let toriaiHead = {
+            branch: {
+              branchName: this.summaryData[0].branch
+            },
+            materialType: {
+              materialTypeName: this.summaryData[0].type,
+              dimension: this.summaryData[0].dimension,
+            },
+            typeToriai: this.typeToriai,
+            totalLengthExpected: this.summaryData[0].totalLengthExpected,
+            totalQuantity: this.summaryData[0].totalQuantity,
+            listToriaiGyo: this.gyoData.slice(0, this.gyoData.length - 2),
+            listToriaiRetsu: getRetsuDataDefault(),
+          };
+          console.log("375 toriaiHead: ", toriaiHead);
+          this.exeAlgorithm(toriaiHead).then(result => {
+            if (result.status === 200) {
+              let toriaiHead = result.body;
+              let listToriaiRetsu = toriaiHead.listToriaiRetsu;
+              let kankeiData = toriaiHead.algorithmResult;
+              kankeiData.push(listToriaiRetsu.map(item => item.lengthUsed), listToriaiRetsu.map(item => item.lengthRemaining));
+              this.retsuData =  [...convertRetsuData(listToriaiRetsu || retsuDataDefault), ...convertKankeiData(kankeiData)];
+              this.summaryData[0].totalLengthUsed = toriaiHead.totalLengthUsed;
+              this.summaryData[0].totalLengthRemain = toriaiHead.totalLengthRemain;
+              this.summaryData[0].rateUse = toriaiHead.rateUse;
+              this.summaryData[0].rateRemain = toriaiHead.rateRemain;
+            } else {
+              this.$message.error(result.message);
+            }
+            this.loadingToriai = !this.loadingToriai;
+          })
+        } catch (e) {
+          this.loadingToriai = !this.loadingToriai;
+        }
+      },
     },
   }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 		.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
 			padding: 9px 9px !important;
 		}

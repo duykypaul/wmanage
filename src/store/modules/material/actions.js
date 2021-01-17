@@ -12,13 +12,21 @@ export default {
     }
   },
   async saveAllMaterial({commit}, payload) {
+    let objError = {
+      status: 500,
+      message: "Error"
+    };
     try {
       let materials = await MaterialRepository.saveAllData(payload);
-      if (materials.status === 200) {
-        return materials;
+      console.log('materials: ', materials);
+      if (materials.data && materials.status === 200) {
+        return materials.data;
+      } else {
+        return objError
       }
     } catch (error) {
       console.log(error);
+      return objError
     }
   }
 }

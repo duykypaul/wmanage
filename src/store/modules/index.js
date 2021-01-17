@@ -4,6 +4,7 @@ import branch from './branch'
 import materialType from './materialType'
 import material from './material'
 import order from './order'
+import toriai from './toriai'
 
 export default {
   user,
@@ -11,5 +12,6 @@ export default {
   branch,
   materialType,
   material,
-  order
+  order,
+  toriai,
 }

@@ -356,30 +356,29 @@
         this.$refs.modalToriai.setToriaiVisible();
         let gyoData = this.convertGyoData(this.selectedRows);
         this.$refs.modalToriai.setGyoData(gyoData);
-
-        let retsuData = [
-          {key: 1, name: "S00001", length: 13000, quantity: 3},
-          {key: 2, name: "S00002", length: 13000, quantity: 5},
-          {key: 3, name: "S00003", length: 13000, quantity: 6},
-          {key: 4, name: "", length: 0, quantity: 0},
-          {key: 5, name: "", length: 0, quantity: 0},
-          {key: 6, name: "", length: 0, quantity: 0},
-          {key: 7, name: "", length: 0, quantity: 0},
-          {key: 8, name: "", length: 0, quantity: 0},
-          {key: 9, name: "", length: 0, quantity: 0},
-          {key: 10, name: "", length: 0, quantity: 0},
-          {key: 11, name: "", length: 0, quantity: 0},
-          {key: 12, name: "", length: 0, quantity: 0},
+        /*let retsuData = [
+          {key: 1, retsuNo: 1, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 2, retsuNo: 2, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 3, retsuNo: 3, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 4, retsuNo: 4, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 5, retsuNo: 5, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 6, retsuNo: 6, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 7, retsuNo: 7, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 8, retsuNo: 8, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 9, retsuNo: 9, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 10, retsuNo: 10, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 11, retsuNo: 11, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
+          {key: 12, retsuNo: 12, bozaimotoToriaiHeadNo: "", length: 0, quantity: 0, lengthUsed: 0, lengthRemaining: 0},
         ];
         let kankeiPreData = [
-          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          /*TWO LAST ARRAY IS NUMBER LENGTH STEEL USED AND REMAINING */
-          [10000, 12000, 13000, 0, 0, 0, 0, 0, 0, 0],
-          [3000, 1000, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          /!*TWO LAST ARRAY IS NUMBER LENGTH STEEL USED AND REMAINING *!/
+          retsuData.map(item => item.lengthUsed),
+          retsuData.map(item => item.lengthRemaining),
         ];
-        // this.$refs.modalToriai.setRetsuDataPreKankei(gyoData, retsuData, kankeiPreData);
+        this.$refs.modalToriai.setRetsuDataPreKankei(gyoData, retsuData, kankeiPreData);*/
         this.$refs.modalToriai.setRetsuDataPreKankei(gyoData);
         console.log(this.selectedRows[0]);
         let summaryData = [
@@ -404,6 +403,7 @@
           data.forEach((item, index) => {
             convertGyoData.push({
               key: index + 1,
+              gyoNo: index + 1,
               length: item.length,
               quantity: item.quantity
             });
@@ -411,12 +411,14 @@
           convertGyoData.push(
             {
               key: (convertGyoData[convertGyoData.length - 1]?.key || 1) + 1,
+              gyoNo: (convertGyoData[convertGyoData.length - 1]?.key || 1) + 1,
               length: 0,
               quantity: 0
             });
           convertGyoData.push(
             {
               key: convertGyoData[convertGyoData.length - 1]?.key + 1,
+              gyoNo: convertGyoData[convertGyoData.length - 1]?.key + 1,
               length: 0,
               quantity: 0
             });

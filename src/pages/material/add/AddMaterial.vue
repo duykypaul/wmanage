@@ -352,9 +352,9 @@
                 editable: true
               }
             ];
-            this.$message.success("Save data success!", 3);
+            this.$message.success(result.message, 3);
 					} else {
-            this.$message.error(result.message);
+            this.$message.error(result.message, 3);
 					}
           this.loading = false;
 				})
